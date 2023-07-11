@@ -171,8 +171,6 @@ class IaaiSpider(scrapy.Spider):
         # except TimeoutException:
         #     print("Timed out waiting for element to be present")
 
-        print("detail_urls", detail_urls)
-
         # try:
         #     wait.until(EC.presence_of_all_elements_located((By.XPATH, './/div[contains(@class,"table-body border")]/div//h4/a/@href')))
         
@@ -227,14 +225,85 @@ class IaaiSpider(scrapy.Spider):
         item['Detail_Url'] = response.url
         
         item['Title'] = response.xpath('.//section[@class="section section--vehicle-title"]//h1/text()').get('').strip()
+        
+        ###### Vehicle_Information #####
         item['Vehicle_Information'] = '\n'.join(
             [re.sub('\s+', ' ', ' '.join(data.xpath('./span/text()').getall())).strip() for data in response.xpath(
                 './/h2[text()="Vehicle Information"]/../..//ul[@class="data-list data-list--details"]/li')]).strip()
+        
+        Vehicle_Information_data = response.xpath('.//h2[text()="Vehicle Information"]/../..//ul[@class="data-list data-list--details"]/li').get_all()
+        print(Vehicle_Information_data)
+        
+        # Iterate over each field
+        for data in Vehicle_Information_data:
+        # Get the text of the field
+            field_text = ' '.join(data.xpath('./span/text()').getall()).strip()
+
+            # Split the field text into title and value
+            title, value = field_text.split(':', 1)
+
+            # Clean up the title and value by removing extra spaces
+            title = re.sub('\s+', ' ', title).strip()
+            value = re.sub('\s+', ' ', value).strip()
+
+            print(f"Title is {title} and value is {value}")
+            
+            # Store the field in the item dictionary
+            item[title] = value
+
+        # # Check if the 'Stock' field is available and store it separately
+        # if 'Stock' in item:
+        #     item['Stock'] = item['Stock']
+        
+        item['Stock'] = response.xpath('.//h2[text()="Vehicle Information"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Stock #:"]/following-sibling::*//text()"').get()
+        
+        item['Selling_Branch'] = response.xpath('.//h2[text()="Vehicle Information"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Selling Branch:"]/following-sibling::*//text()').get()
+        
+        item['Loss'] = response.xpath('.//h2[text()="Vehicle Information"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Loss:"]/following-sibling::*//text()').get()
+        
+        item['Primary_Damage'] = response.xpath('.//h2[text()="Vehicle Information"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Primary Damage:"]/following-sibling::*//text()').get()
+        
+        item['Title/Sale_Doc'] = response.xpath('.//h2[text()="Vehicle Information"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Title/Sale Doc:"]/following-sibling::*//text()').get()
+        
+        item['Start_Code'] = response.xpath('.//h2[text()="Vehicle Information"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Start Code:"]/following-sibling::*//text()').get()
+        
+        item['Key'] = response.xpath('.//h2[text()="Vehicle Information"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Key:"]/following-sibling::*//text()').get()
+        # //h2[text()="Vehicle Information"]/../..//ul[@class="data-list data-list--details"]/li//span[@id="key_image_div"]
+        
+        item['Odometer'] = response.xpath('.//h2[text()="Vehicle Information"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Odometer:"]/following-sibling::*//text()').get()
+        
+        item['Airbags'] = response.xpath('.//h2[text()="Vehicle Information"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Airbags:"]/following-sibling::*//text()').get()
+        
+        #### Price ####
         item['Price'] = response.xpath('.//div[@class="action-area__secondary-info"]//span[text()="Buy Now Price:"]'
                                        '/following-sibling::span/text()').get('').strip()
+        # Vehicle_Description #######
+        
         item['Vehicle_Description'] = '\n'.join(
             [re.sub('\s+', ' ', ' '.join(data.xpath('./span/text()').getall())).strip() for data in response.xpath(
                 './/h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li')]).strip()
+        
+        Vehicle_Description = response.xpath('.//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li').get_all()
+        print(Vehicle_Description)
+        
+        # item['VIN_Status'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="VIN (Status):"]/following-sibling::*//text()').get()
+        # .//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li/span/following-sibling::*//text()
+        item['Vehicle'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Vehicle:"]/following-sibling::*//text()').get()
+        item['Body_Style'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Body Style:"]/following-sibling::*//text()').get()
+        item['Engine'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Engine:"]/following-sibling::*//text()').get()
+        item['Transmission'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Transmission:"]/following-sibling::*//text()').get()
+        item['Drive_Line_Type'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Drive Line Type:"]/following-sibling::*//text()').get()
+        item['Fuel_Type'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Fuel Type:"]/following-sibling::*//text()').get()
+        item['Cylinders'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Cylinders:"]/following-sibling::*//text()').get()
+        item['Restraint_System'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Restraint System:"]/following-sibling::*//text()').get()
+        item['Exterior/Interior'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Exterior/Interior:"]/following-sibling::*//text()').get()
+        item['Options'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Options:"]/following-sibling::*//text()').get()
+        item['Manufactured_In'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Manufactured In:"]/following-sibling::*//text()').get()
+        item['Vehicle_Class'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Vehicle Class:"]/following-sibling::*//text()').get()
+        item['Model'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Model:"]/following-sibling::*//text()').get()
+        item['Series'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Series:"]/following-sibling::*//text()').get()
+        
+        # SALE INFORMATION ###
         item['Auction_Date_Time'] = re.sub('\s+', ' ', ' '.join(
             response.xpath('.//span[text()="Auction Date and Time:"]/following-sibling::*//text()').getall())).strip()
         item['Actual_Cash_Value'] = re.sub('\s+', ' ', ' '.join(
@@ -243,12 +312,14 @@ class IaaiSpider(scrapy.Spider):
         item['Seller'] = re.sub('\s+', ' ', ' '.join(
             response.xpath('.//span[text()="Seller:"]/following-sibling::*//text()').getall())).strip()
         
+        # Images and Videos #############
         item['Images_Urls'] = images
         item['Video_Url'] = video
         name = '_'.join(re.findall('\w+', item.get('Title')))
         item['Images_Names'] = ', '.join([f'{name}_{index + 1}.jpg' for index, img in enumerate(images.split(', '))])
         item['Video_Name'] = f'{name}.mp4' if item.get('Video Url') != '' else ''
         print("item: ", item)
+        
         yield item
 
     @staticmethod
