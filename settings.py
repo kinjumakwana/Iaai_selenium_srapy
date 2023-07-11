@@ -89,6 +89,8 @@ ROBOTSTXT_OBEY = True
 
 # settings.py
 # for chrome driver 
+ROTATING_PROXY_LIST_PATH = 'proxies.txt'
+
 from shutil import which
   
 SELENIUM_DRIVER_NAME = 'chrome'
@@ -103,6 +105,8 @@ SELENIUM_DRIVER_ARGUMENTS=['user-data-dir=C:\\Users\\BAPS\\AppData\\Local\\Googl
 SELENIUM_DRIVER_ARGUMENTS=['--profile-directory=Profile 5']  
   
 DOWNLOADER_MIDDLEWARES = {
-     'scrapy_selenium.SeleniumMiddleware': 800
+     'scrapy_selenium.SeleniumMiddleware': 800,
+     'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
+     'rotating_proxies.middlewares.BanDetectionMiddleware': 620,
      
      }
