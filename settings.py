@@ -89,13 +89,14 @@ ROBOTSTXT_OBEY = True
 
 # settings.py
 # for chrome driver 
-ROTATING_PROXY_LIST_PATH = 'proxies.txt'
+# ROTATING_PROXY_LIST_PATH = 'proxies.txt'
 
 from shutil import which
   
 SELENIUM_DRIVER_NAME = 'chrome'
-SELENIUM_DRIVER_EXECUTABLE_PATH = which('chromedriver')
-SELENIUM_DRIVER_ARGUMENTS=['--headless']  
+SELENIUM_DRIVER_EXECUTABLE_PATH = r'C:\Users\BAPS\.wdm\drivers\chromedriver\win32\113.0.5672.63\chromedriver.exe'
+# SELENIUM_DRIVER_EXECUTABLE_PATH = which('chromedriver')
+# SELENIUM_DRIVER_ARGUMENTS=['--headless']  
 SELENIUM_DRIVER_ARGUMENTS=['--disable-dev-shm-usage']  
 SELENIUM_DRIVER_ARGUMENTS=['--disable-extentions']  
 SELENIUM_DRIVER_ARGUMENTS=['--no-sandbox']  
@@ -106,7 +107,7 @@ SELENIUM_DRIVER_ARGUMENTS=['--profile-directory=Profile 5']
   
 DOWNLOADER_MIDDLEWARES = {
      'scrapy_selenium.SeleniumMiddleware': 800,
-     'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
-     'rotating_proxies.middlewares.BanDetectionMiddleware': 620,
+    #  'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
+    #  'rotating_proxies.middlewares.BanDetectionMiddleware': 620,
      
      }

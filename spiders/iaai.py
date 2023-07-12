@@ -118,6 +118,14 @@ class IaaiSpider(scrapy.Spider):
         'BidStatus': 6,
     }
 
+    user_agent_list = [
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36',
+    'Mozilla/5.0 (iPhone; CPU iPhone OS 14_4_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Mobile/15E148 Safari/604.1',
+    'Mozilla/4.0 (compatible; MSIE 9.0; Windows NT 6.1)',
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36 Edg/87.0.664.75',
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.18363',
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36'
+    ]
     listing_headers = {
         'authority': 'www.iaai.com',
         'accept': '*/*',
@@ -126,6 +134,7 @@ class IaaiSpider(scrapy.Spider):
         'content-type': 'application/json',
         'origin': 'https://www.iaai.com',
         'Referer': 'https://www.iaai.com',
+        # 'user-agent': user_agent_list[random.randint(0, len(user_agent_list)-1)]
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36',
                    
     }
@@ -135,7 +144,7 @@ class IaaiSpider(scrapy.Spider):
         payload = copy.deepcopy(self.payload)
         payload['CurrentPage'] = page_no
         print("page_no",page_no)
-        
+        print(self.listing_headers)
         wait_no = random.randint(1,5)
         print("start_requests",wait_no)
         
@@ -185,8 +194,8 @@ class IaaiSpider(scrapy.Spider):
             for url in detail_urls:
                 # Scroll the link into view
                 print("url:", url)
-                script = "arguments[0].scrollIntoView();"
-                self.execute_script(script, url)
+                # script = "arguments[0].scrollIntoView();"
+                # self.execute_script(script, url)
                                     
                 time.sleep(wait_no)  
                 yield scrapy.Request(url=urljoin(self.base_url, url), callback=self.parse_detail_page,
