@@ -4,11 +4,14 @@ import re
 import time
 from urllib.parse import urljoin
 import scrapy
+from selenium.webdriver import Chrome
 from scrapy_selenium import SeleniumRequest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
 import random
 
 class IaaiSpider(scrapy.Spider):
@@ -146,6 +149,7 @@ class IaaiSpider(scrapy.Spider):
         print("page_no",page_no)
         print(self.listing_headers)
         wait_no = random.randint(1,5)
+        
         print("start_requests",wait_no)
         
         yield SeleniumRequest(url=self.site_url, callback=self.parse_listing_page,
@@ -153,8 +157,31 @@ class IaaiSpider(scrapy.Spider):
         # wait_until=EC.element_to_be_clickable((By.CLASS_NAME, 'quote'))
 
     def parse_listing_page(self, response):
-        # print (response.body) 
         wait_no = random.randint(1,5)
+        # print (response.body) 
+        # self.browser = Chrome()
+        # self.browser = response.url
+       
+        # After scrolling the link into view
+        # script = "arguments[0].scrollIntoView();"
+        # self.browser.execute_script(script, self.site_url)
+
+        x_offset = random.randint(1, 100)
+        y_offset = random.randint(1, 100)
+        
+        # Simulate mouse movement
+        browser = response.meta['driver']
+        element = browser.find_element(By.XPATH,'/html/body')
+        actions = ActionChains(browser)
+        # actions.send_keys(Keys.ARROW_DOWN)
+        # actions.perform()
+        actions.move_to_element(element)
+        actions.move_by_offset(x_offset, y_offset)  # Move the mouse 100 pixels to the right
+        print("Action: ", actions)
+        actions.perform()
+
+        time.sleep(10)
+        
         print("parse_listing_page",wait_no)
         
         # wait = WebDriverWait(self.browser, 10)
@@ -167,9 +194,6 @@ class IaaiSpider(scrapy.Spider):
         page_no = response.meta.get('page_no')
         print("page_no",page_no)
         # print("payload",payload)
-        
-        one_url = response.xpath(".//div[contains(@class,'table-body border')]").get()
-        print(one_url)
         
         # Wait until a list of detail URLs is present
         # Wait until a list of detail URLs is present
@@ -240,25 +264,25 @@ class IaaiSpider(scrapy.Spider):
             [re.sub('\s+', ' ', ' '.join(data.xpath('./span/text()').getall())).strip() for data in response.xpath(
                 './/h2[text()="Vehicle Information"]/../..//ul[@class="data-list data-list--details"]/li')]).strip()
         
-        Vehicle_Information_data = response.xpath('.//h2[text()="Vehicle Information"]/../..//ul[@class="data-list data-list--details"]/li').get_all()
-        print(Vehicle_Information_data)
+        # Vehicle_Information_data = response.xpath('.//h2[text()="Vehicle Information"]/../..//ul[@class="data-list data-list--details"]/li').get_all()
+        # print(Vehicle_Information_data)
         
-        # Iterate over each field
-        for data in Vehicle_Information_data:
-        # Get the text of the field
-            field_text = ' '.join(data.xpath('./span/text()').getall()).strip()
+        # # Iterate over each field
+        # for data in Vehicle_Information_data:
+        # # Get the text of the field
+        #     field_text = ' '.join(data.xpath('./span/text()').getall()).strip()
 
-            # Split the field text into title and value
-            title, value = field_text.split(':', 1)
+        #     # Split the field text into title and value
+        #     title, value = field_text.split(':', 1)
 
-            # Clean up the title and value by removing extra spaces
-            title = re.sub('\s+', ' ', title).strip()
-            value = re.sub('\s+', ' ', value).strip()
+        #     # Clean up the title and value by removing extra spaces
+        #     title = re.sub('\s+', ' ', title).strip()
+        #     value = re.sub('\s+', ' ', value).strip()
 
-            print(f"Title is {title} and value is {value}")
+        #     print(f"Title is {title} and value is {value}")
             
-            # Store the field in the item dictionary
-            item[title] = value
+        #     # Store the field in the item dictionary
+        #     item[title] = value
 
         # # Check if the 'Stock' field is available and store it separately
         # if 'Stock' in item:
