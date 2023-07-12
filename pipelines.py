@@ -1,7 +1,6 @@
 import os
 import re
 import urllib.request
-
 import mysql.connector
 import scrapy
 from scrapy.pipelines.images import ImagesPipeline
@@ -54,8 +53,31 @@ class StoreDataToMySQL:
                     Detail_Url VARCHAR(255),
                     Title VARCHAR(255),
                     Vehicle_Information LONGTEXT,
+                    Stock VARCHAR(255),
+                    Selling_Branch VARCHAR(255),
+                    Loss VARCHAR(255),
+                    Primary_Damage VARCHAR(255),
+                    Title_Sale_Doc VARCHAR(255),
+                    Start_Code VARCHAR(255),
+                    Key_ VARCHAR(255),
+                    Odometer VARCHAR(255),
+                    Airbags VARCHAR(255),
                     Price VARCHAR(255),
                     Vehicle_Description LONGTEXT,
+                    Vehicle VARCHAR(255),
+                    Body_Style VARCHAR(255),
+                    Engine VARCHAR(255),
+                    Transmission VARCHAR(255),
+                    Drive_Line_Type VARCHAR(255),
+                    Fuel_Type VARCHAR(255),
+                    Cylinders VARCHAR(255),
+                    Restraint_System VARCHAR(255),
+                    Exterior_Interior VARCHAR(255),
+                    Options VARCHAR(255),
+                    Manufactured_In VARCHAR(255),
+                    Vehicle_Class VARCHAR(255),
+                    Model VARCHAR(255),
+                    Series VARCHAR(255),
                     Auction_Date_Time VARCHAR(255),
                     Actual_Cash_Value VARCHAR(255),
                     Seller VARCHAR(255),
@@ -67,14 +89,37 @@ class StoreDataToMySQL:
 
     def store_db(self, item):
         command = (f"INSERT INTO {self.table_name} "
-                   f"VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
+                   f"VALUES (%s, %s, %s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
         data = (
             item['Listing_Url'],
             item['Detail_Url'],
             item['Title'],
             item['Vehicle_Information'],
+            item['Stock'],
+            item['Selling_Branch'],
+            item['Loss'],
+            item['Primary_Damage'],
+            item['Title/Sale_Doc'],
+            item['Start_Code'],
+            item['Key'],
+            item['Odometer'],
+            item['Airbags'],
             item['Price'],
             item['Vehicle_Description'],
+            item['Vehicle'],
+            item['Body_Style'],
+            item['Engine'],
+            item['Transmission'],
+            item['Drive_Line_Type'],
+            item['Fuel_Type'],
+            item['Cylinders'],
+            item['Restraint_System'],
+            item['Exterior/Interior'],
+            item['Options'],
+            item['Manufactured_In'],
+            item['Vehicle_Class'],
+            item['Model'],
+            item['Series'],
             item['Auction_Date_Time'],
             item['Actual_Cash_Value'],
             item['Seller'],
@@ -82,6 +127,7 @@ class StoreDataToMySQL:
             item['Video_Url'],
             item['Images_Names'],
             item['Video_Name'])
+        
         self.cursor.execute(command, data)
         self.connection.commit()
 

@@ -256,23 +256,32 @@ class IaaiSpider(scrapy.Spider):
         #     item['Stock'] = item['Stock']
         
         item['Stock'] = response.xpath('.//h2[text()="Vehicle Information"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Stock #:"]/following-sibling::*//text()"').get()
+        print("item['Stock'] :", item['Stock'])
         
         item['Selling_Branch'] = response.xpath('.//h2[text()="Vehicle Information"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Selling Branch:"]/following-sibling::*//text()').get()
+        print("item['Selling_Branch']:", item['Selling_Branch'])
         
         item['Loss'] = response.xpath('.//h2[text()="Vehicle Information"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Loss:"]/following-sibling::*//text()').get()
+        print("item['Loss']:", item['Loss'])
         
         item['Primary_Damage'] = response.xpath('.//h2[text()="Vehicle Information"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Primary Damage:"]/following-sibling::*//text()').get()
+        print("item['Primary_Damage']:", item['Primary_Damage'])
         
         item['Title/Sale_Doc'] = response.xpath('.//h2[text()="Vehicle Information"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Title/Sale Doc:"]/following-sibling::*//text()').get()
+        print("item['Title/Sale_Doc']:", item['Title/Sale_Doc'])
         
         item['Start_Code'] = response.xpath('.//h2[text()="Vehicle Information"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Start Code:"]/following-sibling::*//text()').get()
+        print("item['Start_Code']:", item['Start_Code'])
         
         item['Key'] = response.xpath('.//h2[text()="Vehicle Information"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Key:"]/following-sibling::*//text()').get()
         # //h2[text()="Vehicle Information"]/../..//ul[@class="data-list data-list--details"]/li//span[@id="key_image_div"]
+        print("item['Key']: ", item['Key'])
         
         item['Odometer'] = response.xpath('.//h2[text()="Vehicle Information"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Odometer:"]/following-sibling::*//text()').get()
+        print("item['Odometer']:", item['Odometer'])
         
         item['Airbags'] = response.xpath('.//h2[text()="Vehicle Information"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Airbags:"]/following-sibling::*//text()').get()
+        print("item['Airbags']:", item['Airbags'])
         
         #### Price ####
         item['Price'] = response.xpath('.//div[@class="action-area__secondary-info"]//span[text()="Buy Now Price:"]'
@@ -289,20 +298,47 @@ class IaaiSpider(scrapy.Spider):
         # item['VIN_Status'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="VIN (Status):"]/following-sibling::*//text()').get()
         # .//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li/span/following-sibling::*//text()
         item['Vehicle'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Vehicle:"]/following-sibling::*//text()').get()
-        item['Body_Style'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Body Style:"]/following-sibling::*//text()').get()
-        item['Engine'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Engine:"]/following-sibling::*//text()').get()
-        item['Transmission'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Transmission:"]/following-sibling::*//text()').get()
-        item['Drive_Line_Type'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Drive Line Type:"]/following-sibling::*//text()').get()
-        item['Fuel_Type'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Fuel Type:"]/following-sibling::*//text()').get()
-        item['Cylinders'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Cylinders:"]/following-sibling::*//text()').get()
-        item['Restraint_System'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Restraint System:"]/following-sibling::*//text()').get()
-        item['Exterior/Interior'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Exterior/Interior:"]/following-sibling::*//text()').get()
-        item['Options'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Options:"]/following-sibling::*//text()').get()
-        item['Manufactured_In'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Manufactured In:"]/following-sibling::*//text()').get()
-        item['Vehicle_Class'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Vehicle Class:"]/following-sibling::*//text()').get()
-        item['Model'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Model:"]/following-sibling::*//text()').get()
-        item['Series'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Series:"]/following-sibling::*//text()').get()
+        print("item['Vehicle']", item['Vehicle'] )
         
+        item['Body_Style'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Body Style:"]/following-sibling::*//text()').get()
+        print("item['Body_Style']:", item['Body_Style'])
+        
+        item['Engine'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Engine:"]/following-sibling::*//text()').get()
+        print("item['Engine']:", item['Engine'])
+        
+        item['Transmission'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Transmission:"]/following-sibling::*//text()').get()
+        print("item['Transmission']:", item['Transmission'])
+        
+        item['Drive_Line_Type'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Drive Line Type:"]/following-sibling::*//text()').get()
+        print("item['Drive_Line_Type']:", item['Drive_Line_Type'])
+        
+        item['Fuel_Type'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Fuel Type:"]/following-sibling::*//text()').get()
+        print("item['Fuel_Type']: ", item['Fuel_Type'])
+        
+        item['Cylinders'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Cylinders:"]/following-sibling::*//text()').get()
+        print("item['Cylinders']:", item['Cylinders'])
+        
+        item['Restraint_System'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Restraint System:"]/following-sibling::*//text()').get()
+        print("item['Restraint_System']:", item['Restraint_System'] )
+        
+        item['Exterior/Interior'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Exterior/Interior:"]/following-sibling::*//text()').get()
+        print("item['Exterior/Interior']: ", item['Exterior/Interior'])
+        
+        item['Options'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Options:"]/following-sibling::*//text()').get()
+        print("item['Options']", item['Options'])
+        
+        item['Manufactured_In'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Manufactured In:"]/following-sibling::*//text()').get()
+        print("item['Manufactured_In']:", item['Manufactured_In'])
+        
+        item['Vehicle_Class'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Vehicle Class:"]/following-sibling::*//text()').get()
+        print("item['Vehicle_Class']:", item['Vehicle_Class'])
+        
+        item['Model'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Model:"]/following-sibling::*//text()').get()
+        print("item['Model']", item['Model'])
+        
+        item['Series'] = response.xpath('//h2[text()="Vehicle Description"]/../..//ul[@class="data-list data-list--details"]/li//span[text()="Series:"]/following-sibling::*//text()').get()
+        print("item['Series']:", item['Series'])
+
         # SALE INFORMATION ###
         item['Auction_Date_Time'] = re.sub('\s+', ' ', ' '.join(
             response.xpath('.//span[text()="Auction Date and Time:"]/following-sibling::*//text()').getall())).strip()
