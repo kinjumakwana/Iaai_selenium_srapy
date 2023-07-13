@@ -89,7 +89,11 @@ ROBOTSTXT_OBEY = True
 
 # settings.py
 # for chrome driver 
+AUTOTHROTTLE_ENABLED = True
 # ROTATING_PROXY_LIST_PATH = 'proxies.txt'
+ROTATING_PROXY_LIST = [
+   '208.180.237.55:31012','54.160.234.152:8080'
+]
 
 from shutil import which
   
@@ -107,7 +111,11 @@ SELENIUM_DRIVER_ARGUMENTS=['--profile-directory=Profile 5']
   
 DOWNLOADER_MIDDLEWARES = {
      'scrapy_selenium.SeleniumMiddleware': 800,
-    #  'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
-    #  'rotating_proxies.middlewares.BanDetectionMiddleware': 620,
+     # 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
+#      'scrapy_rotating_proxies.middlewares.RotatingProxyMiddleware': 350,
+     # 'scrapy_user_agents.middlewares.RandomUserAgentMiddleware': 400,
+     'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 400,
+     'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
+     'rotating_proxies.middlewares.BanDetectionMiddleware': 620,
      
      }

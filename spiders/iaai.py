@@ -12,7 +12,13 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
-import random
+from random import uniform, randint, randrange
+
+# Randomization Related
+MIN_RAND        = 0.64
+MAX_RAND        = 1.27
+LONG_MIN_RAND   = 4.78
+LONG_MAX_RAND = 11.1
 
 class IaaiSpider(scrapy.Spider):
     name = 'iaai'
@@ -127,7 +133,8 @@ class IaaiSpider(scrapy.Spider):
     'Mozilla/4.0 (compatible; MSIE 9.0; Windows NT 6.1)',
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36 Edg/87.0.664.75',
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.18363',
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36'
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36',
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36'
     ]
     listing_headers = {
         'authority': 'www.iaai.com',
@@ -137,52 +144,65 @@ class IaaiSpider(scrapy.Spider):
         'content-type': 'application/json',
         'origin': 'https://www.iaai.com',
         'Referer': 'https://www.iaai.com',
-        # 'user-agent': user_agent_list[random.randint(0, len(user_agent_list)-1)]
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36',
+        'user-agent': user_agent_list[randint(0, len(user_agent_list)-1)]
+        # 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36',
                    
     }
 
+    def wait_between(self, a, b):
+        rand=uniform(a, b)
+        time.sleep(rand)
+        
     def start_requests(self):
         page_no = 1
         payload = copy.deepcopy(self.payload)
         payload['CurrentPage'] = page_no
         print("page_no",page_no)
         print(self.listing_headers)
-        wait_no = random.randint(1,5)
-        
-        print("start_requests",wait_no)
+        # wait_no = randint(1,5)
+        self.log("Wait")
+        self.wait_between(MIN_RAND, MAX_RAND)
         
         yield SeleniumRequest(url=self.site_url, callback=self.parse_listing_page,
-                             meta={'page_no': page_no, 'payload': payload}, wait_time=wait_no)
+                             meta={'page_no': page_no, 'payload': payload})
         # wait_until=EC.element_to_be_clickable((By.CLASS_NAME, 'quote'))
 
     def parse_listing_page(self, response):
-        wait_no = random.randint(1,5)
+        # self.logger.info('IP address: %s' % response.text)
+        self.logger.info(f"HTML content for URL {response.url}: {response.text}")
+        
+        self.log("Wait")
+        self.wait_between(MIN_RAND, MAX_RAND)
+        # print(response.meta['proxy'])
         # print (response.body) 
         # self.browser = Chrome()
         # self.browser = response.url
-       
         # After scrolling the link into view
         # script = "arguments[0].scrollIntoView();"
         # self.browser.execute_script(script, self.site_url)
-
-        x_offset = random.randint(1, 100)
-        y_offset = random.randint(1, 100)
+        a = randint(1,100)
+        b = randint(a + 1, 500)
+         
+        x_offset = randrange(a, b)
+        y_offset = randrange(a, b)
         
+        print("x_offset:", x_offset)
+        print("y_offset:", y_offset)
         # Simulate mouse movement
         browser = response.meta['driver']
+        
         element = browser.find_element(By.XPATH,'/html/body')
         actions = ActionChains(browser)
         # actions.send_keys(Keys.ARROW_DOWN)
         # actions.perform()
         actions.move_to_element(element)
         actions.move_by_offset(x_offset, y_offset)  # Move the mouse 100 pixels to the right
+        print(x_offset,y_offset)
         print("Action: ", actions)
         actions.perform()
 
-        time.sleep(10)
-        
-        print("parse_listing_page",wait_no)
+        self.log("Wait")
+        self.wait_between(LONG_MIN_RAND, LONG_MAX_RAND)
         
         # wait = WebDriverWait(self.browser, 10)
         print("Path: " + response.request.url)
@@ -212,7 +232,8 @@ class IaaiSpider(scrapy.Spider):
         
         detail_urls = response.xpath('.//div[contains(@class,"table-body border")]/div//h4/a/@href').getall()
         print("detail_urls",detail_urls)
-        time.sleep(wait_no)  
+        self.log("Wait")
+        self.wait_between(MIN_RAND, MAX_RAND)
         
         if detail_urls:
             for url in detail_urls:
@@ -221,22 +242,21 @@ class IaaiSpider(scrapy.Spider):
                 # script = "arguments[0].scrollIntoView();"
                 # self.execute_script(script, url)
                                     
-                time.sleep(wait_no)  
+                self.log("Wait")
+                self.wait_between(MIN_RAND, MAX_RAND) 
                 yield scrapy.Request(url=urljoin(self.base_url, url), callback=self.parse_detail_page,
                                      meta={'listing_url': f'{response.url} -> (page_no {page_no})'})
 
             page_no += 1
             payload['CurrentPage'] = page_no
-            print(f"wait for {wait_no} min")
             
             yield SeleniumRequest(method='POST', url=response.url, callback=self.parse_listing_page,
                                      headers=self.listing_headers, body=json.dumps(payload),
-                                     meta={'page_no': page_no, 'payload': payload}, wait_time=wait_no)
+                                     meta={'page_no': page_no, 'payload': payload})
 
     def parse_detail_page(self, response):
-        wait_no = random.randint(1,5)
-        print("parse_detail_page",wait_no)
-        
+        self.log("Wait")
+        self.wait_between(MIN_RAND, MAX_RAND)
         # wait = WebDriverWait(self.browser, 10)
         # # Wait until a specific script element is present
         # script_element = wait.until(EC.presence_of_element_located((By.XPATH, './/script[@id="ProductDetailsVM"]/text()')))
@@ -244,14 +264,16 @@ class IaaiSpider(scrapy.Spider):
     
         # wait.until(EC.presence_of_element_located((By.XPATH, './/script[@id="ProductDetailsVM"]/text()')))
         json_data = response.xpath('.//script[@id="ProductDetailsVM"]/text()').get('{}')
-        time.sleep(wait_no)
+        self.log("Wait")
+        self.wait_between(MIN_RAND, MAX_RAND)
          
         json_data = json.loads(json_data)
         print(json_data)
         images, video = self.get_media_urls(json_data)
         print(f"images is {images} video is {video}")
         
-        time.sleep(wait_no)
+        self.log("Wait")
+        self.wait_between(MIN_RAND, MAX_RAND)
         
         item = dict()
         item['Listing_Url'] = response.meta.get('listing_url')
