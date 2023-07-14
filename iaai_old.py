@@ -16,21 +16,12 @@ from selenium.webdriver.common.keys import Keys
 from random import uniform, randint, randrange
 import urllib.request
 import six
-from selenium import webdriver
-from selenium.webdriver.common.proxy import Proxy, ProxyType
-from webdriver_manager.chrome import ChromeDriverManager
-from seleniumwire import webdriver
 
 # Randomization Related
 MIN_RAND        = 0.64
 MAX_RAND        = 1.27
 LONG_MIN_RAND   = 4.78
 LONG_MAX_RAND = 11.1
-
-PROXY_IP ='brd.superproxy.io'
-PROXY_PORT = 22225
-USERNAME = 'brd-customer-hl_4d1c7dbf-zone-residential'
-PASSWORD = '5qgj4rnvh9g0'
 
 class IaaiSpider(scrapy.Spider):
     name = 'iaai'
@@ -161,64 +152,60 @@ class IaaiSpider(scrapy.Spider):
                    
     }
 
+    
+    def get_proxy_response(self):
+        if sys.version_info[0] == 3:
+            opener = urllib.request.build_opener(
+                urllib.request.ProxyHandler(
+                    {'http': 'http://brd-customer-hl_4d1c7dbf-zone-residential:5qgj4rnvh9g0@brd.superproxy.io:22225',
+                    'https': 'http://brd-customer-hl_4d1c7dbf-zone-residential:5qgj4rnvh9g0@brd.superproxy.io:22225'}))
+
+            response = urllib.request.urlopen('http://lumtest.com/myip.json').read()
+            print(response)
+            return response
+        
+    def get_proxy_ip(self,response):
+        response_data = json.loads(response.decode('utf-8'))
+        ip_address = response_data.get('ip')
+        print(ip_address)
+        return ip_address
+
     def wait_between(self, a, b):
         rand=uniform(a, b)
         time.sleep(rand)
         
     def start_requests(self):
-        # Configure Selenium options
-        options = webdriver.ChromeOptions()
-        options.add_argument('--proxy-server=http://brd.superproxy.io:22225')
-        options.add_argument('--ignore-certificate-errors')
-                # Define your proxy endpoints
-        proxy_options = {
-            'proxy': {
-                'http': 'http://brd-customer-hl_4d1c7dbf-zone-residential:5qgj4rnvh9g0@brd.superproxy.io:22225',
-                'https': 'http://brd-customer-hl_4d1c7dbf-zone-residential:5qgj4rnvh9g0@brd.superproxy.io:22225',
-                'no_proxy': ''
-            }
-        }
-        # Set up Selenium Chrome driver with proxy options
-        driver = webdriver.Chrome(ChromeDriverManager().install(), seleniumwire_options=proxy_options)
-        # # Set Bright Data credentials
-        # proxy = Proxy()
-        # proxy.proxy_type = ProxyType.MANUAL
-        # proxy.http_proxy = 'brd-customer-hl_4d1c7dbf-zone-residential:5qgj4rnvh9g0@brd.superproxy.io:22225'
+        proxy_response = self.get_proxy_response()
+        print("proxy_response", proxy_response)
+        proxy_ip = self.get_proxy_ip(proxy_response)
+        print("proxy_ip", proxy_ip)
+        
+        if proxy_ip:
+            # Use the extracted IP address as the proxy for Scrapy
+            proxy = f"http://{proxy_ip}:22225"
+            self.log(f"Using proxy: {proxy}")
+            page_no = 1
+            payload = copy.deepcopy(self.payload)
+            payload['CurrentPage'] = page_no
+            print("page_no",page_no)
+            print(self.listing_headers)
+            # wait_no = randint(1,5)
+            self.log("Wait")
+            self.wait_between(MIN_RAND, MAX_RAND)
+            
+            yield scrapy.Request(url=self.site_url, callback=self.parse_listing_page,
+                                meta={'page_no': page_no, 'payload': payload, 'proxy': proxy_ip})
+            # wait_until=EC.element_to_be_clickable((By.CLASS_NAME, 'quote'))
 
-        # print("proxy.http_proxy: ",proxy.http_proxy)
-        # print(proxy)
-        
-        # # Configure WebDriver with Bright Data proxy
-        # capabilities = webdriver.DesiredCapabilities.CHROME
-        # proxy.add_to_capabilities(capabilities)
-        
-        # # Create WebDriver instance
-        # driver = webdriver.Chrome(executable_path=r'C:\Users\BAPS\.wdm\drivers\chromedriver\win32\113.0.5672.63\chromedriver.exe', options=options, desired_capabilities=capabilities)
-        driver.get(self.site_url)
-        
-        page_no = 1
-        payload = copy.deepcopy(self.payload)
-        payload['CurrentPage'] = page_no
-        print("page_no",page_no)
-        print(self.listing_headers)
-        # wait_no = randint(1,5)
-        self.log("Wait")
-        self.wait_between(MIN_RAND, MAX_RAND)
-        
-        yield scrapy.Request(url=self.site_url, callback=self.parse_listing_page,
-                            meta={'page_no': page_no, 'payload': payload, 'driver': driver})
-   
     def parse_listing_page(self, response):
         # self.logger.info('IP address: %s' % response.text)
-        browser = response.meta['driver']
-         # Navigating to site_url
-        browser.get(response.url)
-        
         self.logger.info(f"HTML content for URL {response.url}: {response.text}")
+        proxy_ip = response.meta['proxy']
+        print(proxy_ip)
         self.log("Wait")
         self.wait_between(MIN_RAND, MAX_RAND)
         # print(response.meta['proxy'])
-        # print (response.body)             
+        # print (response.body) 
         # self.browser = Chrome()
         # self.browser = response.url
         # After scrolling the link into view
@@ -233,7 +220,7 @@ class IaaiSpider(scrapy.Spider):
         print("x_offset:", x_offset)
         print("y_offset:", y_offset)
         # Simulate mouse movement
-        
+        browser = response.meta['driver']
         
         element = browser.find_element(By.XPATH,'/html/body')
         actions = ActionChains(browser)

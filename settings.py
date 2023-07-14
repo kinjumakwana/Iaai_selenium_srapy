@@ -120,3 +120,12 @@ ROBOTSTXT_OBEY = True
 #      'rotating_proxies.middlewares.BanDetectionMiddleware': 620,
      
 #      }
+
+DOWNLOADER_MIDDLEWARES = {
+    'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 1,
+    # 'scrapy_brightdata.BrightDataProxyMiddleware': 610,
+
+    
+}
+
+HTTP_PROXY = 'http://brd-customer-hl_4d1c7dbf-zone-residential:5qgj4rnvh9g0@brd.superproxy.io:22225'
