@@ -13,6 +13,7 @@ SPIDER_MODULES = ['Iaai.spiders']
 NEWSPIDER_MODULE = 'Iaai.spiders'
 
 
+
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'Iaai (+http://www.yourdomain.com)'
 
@@ -89,33 +90,33 @@ ROBOTSTXT_OBEY = True
 
 # settings.py
 # for chrome driver 
-AUTOTHROTTLE_ENABLED = True
-# ROTATING_PROXY_LIST_PATH = 'proxies.txt'
-ROTATING_PROXY_LIST = [
-   '208.180.237.55:31012','54.160.234.152:8080'
-]
+# AUTOTHROTTLE_ENABLED = True
+# # ROTATING_PROXY_LIST_PATH = 'proxies.txt'
+# ROTATING_PROXY_LIST = [
+#    '208.180.237.55:31012','54.160.234.152:8080'
+# ]
 
-from shutil import which
+# from shutil import which
   
-SELENIUM_DRIVER_NAME = 'chrome'
-SELENIUM_DRIVER_EXECUTABLE_PATH = r'C:\Users\BAPS\.wdm\drivers\chromedriver\win32\113.0.5672.63\chromedriver.exe'
-# SELENIUM_DRIVER_EXECUTABLE_PATH = which('chromedriver')
-# SELENIUM_DRIVER_ARGUMENTS=['--headless']  
-SELENIUM_DRIVER_ARGUMENTS=['--disable-dev-shm-usage']  
-SELENIUM_DRIVER_ARGUMENTS=['--disable-extentions']  
-SELENIUM_DRIVER_ARGUMENTS=['--no-sandbox']  
-SELENIUM_DRIVER_ARGUMENTS=['--start-maximized']  
-SELENIUM_DRIVER_ARGUMENTS=['--remote-debugging-port=9222']  
-SELENIUM_DRIVER_ARGUMENTS=['user-data-dir=C:\\Users\\BAPS\\AppData\\Local\\Google\\Chrome\\User Data']  
-SELENIUM_DRIVER_ARGUMENTS=['--profile-directory=Profile 5']  
+# SELENIUM_DRIVER_NAME = 'chrome'
+# SELENIUM_DRIVER_EXECUTABLE_PATH = r'C:\Users\BAPS\.wdm\drivers\chromedriver\win32\113.0.5672.63\chromedriver.exe'
+# # SELENIUM_DRIVER_EXECUTABLE_PATH = which('chromedriver')
+# # SELENIUM_DRIVER_ARGUMENTS=['--headless']  
+# SELENIUM_DRIVER_ARGUMENTS=['--disable-dev-shm-usage']  
+# SELENIUM_DRIVER_ARGUMENTS=['--disable-extentions']  
+# SELENIUM_DRIVER_ARGUMENTS=['--no-sandbox']  
+# SELENIUM_DRIVER_ARGUMENTS=['--start-maximized']  
+# SELENIUM_DRIVER_ARGUMENTS=['--remote-debugging-port=9222']  
+# SELENIUM_DRIVER_ARGUMENTS=['user-data-dir=C:\\Users\\BAPS\\AppData\\Local\\Google\\Chrome\\User Data']  
+# SELENIUM_DRIVER_ARGUMENTS=['--profile-directory=Profile 5']  
   
-DOWNLOADER_MIDDLEWARES = {
-     'scrapy_selenium.SeleniumMiddleware': 800,
-     # 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
-#      'scrapy_rotating_proxies.middlewares.RotatingProxyMiddleware': 350,
-     # 'scrapy_user_agents.middlewares.RandomUserAgentMiddleware': 400,
-     'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 400,
-     'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
-     'rotating_proxies.middlewares.BanDetectionMiddleware': 620,
+# DOWNLOADER_MIDDLEWARES = {
+#      'scrapy_selenium.SeleniumMiddleware': 800,
+#      # 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
+# #      'scrapy_rotating_proxies.middlewares.RotatingProxyMiddleware': 350,
+#      # 'scrapy_user_agents.middlewares.RandomUserAgentMiddleware': 400,
+#      'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 400,
+#      'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
+#      'rotating_proxies.middlewares.BanDetectionMiddleware': 620,
      
-     }
+#      }
