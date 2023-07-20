@@ -124,6 +124,7 @@ ROBOTSTXT_OBEY = True
 DOWNLOADER_MIDDLEWARES = {
     'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 1,
     # 'scrapy_brightdata.BrightDataProxyMiddleware': 610,
+    
 
     
 }

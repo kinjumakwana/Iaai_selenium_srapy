@@ -49,6 +49,8 @@ class IaaiSpider(scrapy.Spider):
         'RETRY_TIMES': 5,
         'HTTPERROR_ALLOW_ALL': True,
         'ROBOTSTXT_OBEY': False,
+        'BRIGHTDATA_ENABLED': True,
+        'BRIGHTDATA_URL': 'http://127.0.0.1:24000'  
     }
     payload = {
         'Searches': [
