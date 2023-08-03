@@ -123,10 +123,12 @@ ROBOTSTXT_OBEY = True
 
 DOWNLOADER_MIDDLEWARES = {
     'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 1,
-    # 'scrapy_brightdata.BrightDataProxyMiddleware': 610,
-    
-
-    
+    'scrapy_selenium.SeleniumMiddleware': 800,
 }
 
-HTTP_PROXY = 'http://brd-customer-hl_4d1c7dbf-zone-residential:5qgj4rnvh9g0@brd.superproxy.io:22225'
+# PROXY_USER = 'brd-customer-hl_4d1c7dbf-zone-unblocker'
+# PROXY_PASSWORD = 't61t6izqysqt'
+# PROXY_URL ='brd.superproxy.io'
+# PROXY_PORT = 22225
+    
+# HTTP_PROXY = 'http://brd-customer-hl_4d1c7dbf-zone-unblocker:t61t6izqysqt@brd.superproxy.io:22225'

@@ -101,3 +101,18 @@ class IaaiDownloaderMiddleware:
 
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
+
+# class CustomProxyMiddleware(object):
+#     @classmethod
+#     def from_crawler(cls, crawler):
+#        return cls(crawler.settings)
+ 
+#     def __init__(self, settings):
+#        self.username = settings.get('PROXY_USER')
+#        self.password = settings.get('PROXY_PASSWORD')
+#        self.url = settings.get('PROXY_URL')
+#        self.port = settings.get('PROXY_PORT')
+ 
+#     def process_request(self, request, spider):
+#        host = f'http://{self.username}:{self.password}@{self.url}:{self.port}'
+#        request.meta['proxy'] = host
