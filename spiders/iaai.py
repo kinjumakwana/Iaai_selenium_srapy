@@ -254,7 +254,7 @@ class IaaiSpider(scrapy.Spider):
         # print(f"images is {images} video is {video}")
         
         item = dict()
-        # item['Listing_Url'] = response.meta.get('listing_url')
+        item['Listing_Url'] = response.meta.get('listing_url')
         item['Detail_Url'] = response.url
         time.sleep(5)
         item['Title'] = response.xpath('.//section[@class="section section--vehicle-title"]//h1/text()').get('').strip()
